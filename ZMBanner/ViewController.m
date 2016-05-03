@@ -12,7 +12,7 @@
 #define screenHeight [[UIScreen mainScreen]bounds].size.height //屏幕高度
 #define screenWidth [[UIScreen mainScreen]bounds].size.width   //屏幕宽度
 
-@interface ViewController ()
+@interface ViewController ()<ZMBannerDelegate>
 
 @end
 
@@ -23,7 +23,23 @@
     // Do any additional setup after loading the view, typically from a nib.
     NSArray *imageArray = @[@"IMG_1.JPG",@"IMG_2.JPG"];
     ZMBannerView *zmBanner = [[ZMBannerView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight) pageControlPoint:CGPointMake(screenWidth/2, screenHeight - 50) imageArray:imageArray scrollTimeInterval:2.0f];
+    zmBanner.bannerDelegate = self;
     [self.view addSubview:zmBanner];
+}
+
+//zmBanner Delegate
+- (void)clickedImagePage:(NSInteger)imagePage{
+    switch (imagePage) {
+        case 0:
+            NSLog(@"点击第一幅");
+            break;
+        case 1:
+            NSLog(@"点击第二幅");
+            break;
+            
+        default:
+            break;
+    }
 }
 
 - (void)didReceiveMemoryWarning {

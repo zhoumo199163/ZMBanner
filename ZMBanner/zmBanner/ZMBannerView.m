@@ -162,6 +162,9 @@
 
 - (void)handleTap:(UITapGestureRecognizer *)tap{
     NSLog(@"%@",imageNameArray[currentImageNumber]);
+    if(self.bannerDelegate && [self.bannerDelegate respondsToSelector:@selector(clickedImagePage:)]){
+        [self.bannerDelegate clickedImagePage:currentImageNumber];
+    }
 }
 
 #pragma mark scrollViewDelegate
