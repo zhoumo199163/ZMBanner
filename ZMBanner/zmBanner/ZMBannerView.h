@@ -24,6 +24,17 @@
 
 @property (nonatomic, assign) id<ZMBannerDelegate> bannerDelegate;
 
-- (instancetype)initWithFrame:(CGRect)frame pageControlPoint:(CGPoint)point imageArray:(NSArray *)imageArray scrollTimeInterval:(CGFloat)time;
+/**
+ *  初始化Banner
+ *
+ *  @param frame                bannerFrame
+ *  @param point                pagePoint
+ *  @param imageArray           图片数组，支持本地图片或地址
+ *  @param time                 滚动间隔时间
+ *  @param placeholderImageName 默认图片Name
+ *
+ *  @return
+ */
+- (instancetype)initWithFrame:(CGRect)frame pageControlPoint:(CGPoint)point imageArray:(NSArray *)imageArray scrollTimeInterval:(CGFloat)time placeholderImageName:(NSString *)placeholderImageName;
 
 @end

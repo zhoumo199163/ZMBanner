@@ -7,6 +7,8 @@
 //
 
 #import "ZMBannerView.h"
+#import <SDImageCache.h>
+#import "ZMBannerImageView.h"
 
 @interface ZMBannerView()<UIScrollViewDelegate>
 {
@@ -16,20 +18,25 @@
     NSInteger imageNumber;
     CGFloat scrollTime;
     NSArray *imageNameArray;
+    NSString *placeholder;
 }
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIPageControl *pageControl;
 @property (nonatomic, strong) NSTimer *timer;
-@property (nonatomic, strong) UIImageView *preImageView;//上一个
-@property (nonatomic, strong) UIImageView *currentImageView;//当前
-@property (nonatomic, strong) UIImageView *nextImageView; //下一个
+@property (nonatomic, strong) ZMBannerImageView *preImageView;//上一个
+@property (nonatomic, strong) ZMBannerImageView *currentImageView;//当前
+@property (nonatomic, strong) ZMBannerImageView *nextImageView; //下一个
 @end
 
 @implementation ZMBannerView
 
-- (instancetype)initWithFrame:(CGRect)frame pageControlPoint:(CGPoint)point imageArray:(NSArray *)imageArray scrollTimeInterval:(CGFloat)time{
+- (instancetype)initWithFrame:(CGRect)frame pageControlPoint:(CGPoint)point imageArray:(NSArray *)imageArray scrollTimeInterval:(CGFloat)time placeholderImageName:(NSString *)placeholderImageName{
     self = [super initWithFrame:frame];
     if(self){
+        if(imageArray.count == 0){
+            NSLog(@"没有需要滚动的图片");
+        }
+        placeholder = placeholderImageName;
         selfHeight = self.frame.size.height;
         selfWidth = self.frame.size.width;
         scrollTime = time;
@@ -74,35 +81,30 @@
     [self addSubview:self.pageControl];
 }
 
-- (void)initScrollViewWithImages:(NSArray *)imageArray{
-    if(imageArray.count){
+- (void)initScrollViewWithImages:(NSArray *)imagesArray{
+    if(imagesArray.count){
+        self.currentImageView = [[ZMBannerImageView alloc] initWithImageName:[imagesArray firstObject] placeholder:placeholder];
         
-        UIImage *currentImage = [UIImage imageNamed:[imageArray firstObject]];
-        self.currentImageView = [[UIImageView alloc] initWithImage:currentImage];
         self.currentImageView.frame = CGRectMake(selfWidth, 0, selfWidth, selfHeight);
-        self.currentImageView.userInteractionEnabled = YES;
         [self.scrollView addSubview:self.currentImageView];
         currentImageNumber = 0;
         
         UITapGestureRecognizer *tapGesureTecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
         [self.currentImageView addGestureRecognizer:tapGesureTecognizer];
         
-        if(imageArray.count > 1){
+        if(imagesArray.count > 1){
             
-            UIImage *preImage =  [UIImage imageNamed:[imageArray lastObject]];
-            self.preImageView = [[UIImageView alloc]initWithImage:preImage];
+            self.preImageView = [[ZMBannerImageView alloc] initWithImageName:[imagesArray lastObject] placeholder:placeholder];
             self.preImageView.frame = CGRectMake(0, 0, selfWidth, selfHeight);
-            self.preImageView.userInteractionEnabled = YES;
             [self.scrollView addSubview:self.preImageView];
             
-            UIImage *nextImage = [UIImage imageNamed:imageArray[1]];
-            self.nextImageView = [[UIImageView alloc] initWithImage:nextImage];
+            self.nextImageView = [[ZMBannerImageView alloc] initWithImageName:imagesArray[1] placeholder:placeholder];
             self.nextImageView.frame = CGRectMake(selfWidth *2, 0, selfWidth, selfHeight);
-            self.nextImageView.userInteractionEnabled = YES;
             [self.scrollView addSubview:self.nextImageView];
         }
     }
 }
+
 
 //开启计时
 - (void)startTime{
@@ -150,15 +152,24 @@
         nextIndex =(currentPage +1) > imageNumber?1:(currentPage +1);
         preIndex = (currentPage -1) <=0?imageNumber:(currentPage - 1);
     }
-    
-    [self.currentImageView setImage:[UIImage imageNamed:imageNameArray[currentPage - 1]]];
-    [self.preImageView setImage:[UIImage imageNamed:imageNameArray[preIndex - 1]]];
-    [self.nextImageView setImage:[UIImage imageNamed:imageNameArray[nextIndex -1]]];
+
+    [self.currentImageView setImage:[self getImageFromCache:imageNameArray[currentPage -1]]];
+    [self.preImageView setImage:[self getImageFromCache:imageNameArray[preIndex - 1]]];
+    [self.nextImageView setImage:[self getImageFromCache:imageNameArray[nextIndex - 1]]];
     
     self.pageControl.currentPage = currentPage -1;
     currentImageNumber = currentPage - 1;
     
 }
+
+- (UIImage *)getImageFromCache:(NSString *)cacheKey{
+    UIImage *image = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:cacheKey];
+    if(!image){
+        image = [UIImage imageNamed:placeholder];
+    }
+    return image;
+}
+
 
 - (void)handleTap:(UITapGestureRecognizer *)tap{
     NSLog(@"%@",imageNameArray[currentImageNumber]);

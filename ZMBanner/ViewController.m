@@ -21,8 +21,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    NSArray *imageArray = @[@"IMG_1.JPG",@"IMG_2.JPG"];
-    ZMBannerView *zmBanner = [[ZMBannerView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight) pageControlPoint:CGPointMake(screenWidth/2, screenHeight - 50) imageArray:imageArray scrollTimeInterval:2.0f];
+    NSArray *imageArray = @[@"http://ww2.sinaimg.cn/wap720/005y9kZzgw1f1lorhlzn1j30vj0hsgn7.jpg",@"IMG_3.JPG",@"IMG_2.JPG"];
+    ZMBannerView *zmBanner = [[ZMBannerView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight) pageControlPoint:CGPointMake(screenWidth/2, screenHeight - 50) imageArray:imageArray scrollTimeInterval:5.0f placeholderImageName:@"placeholder.JPG"];
     zmBanner.bannerDelegate = self;
     [self.view addSubview:zmBanner];
 }
