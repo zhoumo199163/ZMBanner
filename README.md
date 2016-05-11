@@ -7,14 +7,15 @@
 /**
  *  初始化Banner
  *
- *  @param frame                bannerFrame
- *  @param point                pagePoint
+ *  @param frame                轮播图的Frame
+ *  @param point                pagePoint:点的位置
  *  @param imageArray           图片数组，支持本地图片或地址
  *  @param time                 滚动间隔时间
- *  @param placeholderImageName 默认图片Name
+ *  @param placeholderImageName 默认图片名称
  *
  *  @return
  */
+ 
 ZMBannerView *zmBanner = [[ZMBannerView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight)   pageControlPoint:CGPointMake(screenWidth/2, screenHeight - 50)  
 imageArray:imageArray scrollTimeInterval:5.0f placeholderImageName:@"placeholder.JPG"];  
 ```
