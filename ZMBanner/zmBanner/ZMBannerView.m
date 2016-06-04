@@ -110,6 +110,9 @@
 - (void)startTime{
 
     self.timer = [NSTimer scheduledTimerWithTimeInterval:scrollTime target:self selector:@selector(scrollToNextImage) userInfo:nil repeats:YES];
+    
+    NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+    [runLoop addTimer:self.timer forMode:NSRunLoopCommonModes];
 
 }
 

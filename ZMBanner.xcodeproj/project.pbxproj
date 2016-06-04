@@ -19,8 +19,8 @@
 		9891C36A1CC77978008C6D32 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9891C3691CC77978008C6D32 /* Assets.xcassets */; };
 		9891C36D1CC77978008C6D32 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9891C36B1CC77978008C6D32 /* LaunchScreen.storyboard */; };
 		9891C3771CC77B6A008C6D32 /* ZMBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9891C3761CC77B6A008C6D32 /* ZMBannerView.m */; };
-		98982E5D1CD98208002595BD /* placeholder.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 98982E5C1CD98208002595BD /* placeholder.JPG */; settings = {ASSET_TAGS = (); }; };
-		98982E601CD9962F002595BD /* ZMBannerImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 98982E5F1CD9962F002595BD /* ZMBannerImageView.m */; settings = {ASSET_TAGS = (); }; };
+		98982E5D1CD98208002595BD /* placeholder.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 98982E5C1CD98208002595BD /* placeholder.JPG */; };
+		98982E601CD9962F002595BD /* ZMBannerImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 98982E5F1CD9962F002595BD /* ZMBannerImageView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -381,6 +381,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ZMBanner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ufida.ZMBanner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -393,6 +394,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ZMBanner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ufida.ZMBanner;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -25,6 +25,7 @@
     ZMBannerView *zmBanner = [[ZMBannerView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight) pageControlPoint:CGPointMake(screenWidth/2, screenHeight - 50) imageArray:imageArray scrollTimeInterval:5.0f placeholderImageName:@"placeholder.JPG"];
     zmBanner.bannerDelegate = self;
     [self.view addSubview:zmBanner];
+    
 }
 
 //zmBanner Delegate
