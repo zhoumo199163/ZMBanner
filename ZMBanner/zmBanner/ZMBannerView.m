@@ -118,7 +118,9 @@
 
 //停止计时
 - (void)endTime{
-        [self.timer invalidate];
+    
+    [self.timer invalidate];
+    self.timer = nil;
 }
 
 
