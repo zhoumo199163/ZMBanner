@@ -19,5 +19,7 @@
 ZMBannerView *zmBanner = [[ZMBannerView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight)   pageControlPoint:CGPointMake(screenWidth/2, screenHeight - 50)  
 imageArray:imageArray scrollTimeInterval:5.0f placeholderImageName:@"placeholder.JPG"];  
 ```
+效果图：
+![image](https://github.com/zhoumo199163/ZMBanner/blob/master/banner.gif)
 
 
