@@ -18,6 +18,10 @@
         self.backgroundColor = [UIColor whiteColor];
         self.contentMode = UIViewContentModeScaleAspectFit;
         NSString *name = imageName;
+        if(name.length == 0){
+            name = placeholder;
+        }
+        
         if([name hasPrefix:@"https://"] || [name hasPrefix:@"http://"]){
             NSURL *url = [NSURL URLWithString:name];
             [self sd_setImageWithURL:url placeholderImage:placeholderImage];
