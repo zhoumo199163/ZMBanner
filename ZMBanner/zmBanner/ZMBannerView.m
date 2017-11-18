@@ -19,6 +19,11 @@
     CGFloat scrollTime;
     NSArray *imageNameArray;
     NSString *placeholder;
+    
+    CGFloat lastMoveX;
+    
+    NSInteger preIndex;
+    NSInteger nextIndex;
 }
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIPageControl *pageControl;
@@ -26,6 +31,8 @@
 @property (nonatomic, strong) ZMBannerImageView *preImageView;//上一个
 @property (nonatomic, strong) ZMBannerImageView *currentImageView;//当前
 @property (nonatomic, strong) ZMBannerImageView *nextImageView; //下一个
+
+
 @end
 
 @implementation ZMBannerView
@@ -45,6 +52,7 @@
         [self initScrollView];
         [self initPageControlWithPoint:point];
         [self initScrollViewWithImages:imageArray];
+
         if(imageNumber == 1){
             //只有一张图片
             self.pageControl.hidden = YES;
@@ -84,7 +92,6 @@
 - (void)initScrollViewWithImages:(NSArray *)imagesArray{
     if(imagesArray.count){
         self.currentImageView = [[ZMBannerImageView alloc] initWithImageName:[imagesArray firstObject] placeholder:placeholder];
-        
         self.currentImageView.frame = CGRectMake(selfWidth, 0, selfWidth, selfHeight);
         [self.scrollView addSubview:self.currentImageView];
         currentImageNumber = 0;
@@ -110,7 +117,7 @@
 - (void)startTime{
 
     self.timer = [NSTimer scheduledTimerWithTimeInterval:scrollTime target:self selector:@selector(scrollToNextImage) userInfo:nil repeats:YES];
-    
+
     NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
     [runLoop addTimer:self.timer forMode:NSRunLoopCommonModes];
 
@@ -125,9 +132,6 @@
 
 
 - (void)scrollToNextImage{
-    NSInteger currentPage = self.pageControl.currentPage;
-    [self reloadImage:currentPage];
-
     CGFloat offSetX = self.scrollView.contentOffset.x;
     offSetX += offSetX;
     [self.scrollView setContentOffset:CGPointMake(offSetX, 0) animated:YES];
@@ -137,33 +141,35 @@
 
 }
 
-- (void)reloadImage:(NSInteger)currentPage{
-    NSInteger preIndex;
-    NSInteger nextIndex;
-    if(currentPage == -1){
-        //第一张图向左
-        currentPage = imageNumber;
-        preIndex = currentPage - 1;
-        nextIndex = 1;
+- (void)completeHandler{
+    CGFloat moveX = self.scrollView.contentOffset.x - self.scrollView.bounds.size.width;
+    if (fabs(moveX) >= self.bounds.size.width) {
+        
+        if (moveX > 0 && self.pageControl.currentPage + 1 < imageNumber) {
+            self.pageControl.currentPage++;
+        }else if (moveX >0 && self.pageControl.currentPage +1 == imageNumber){
+            self.pageControl.currentPage = 0;
+        }
+        else if (self.pageControl.currentPage >= 1){
+            self.pageControl.currentPage--;
+        }else if (self.pageControl.currentPage == 0 && moveX < 0)
+        {
+            self.pageControl.currentPage = imageNumber - 1;
+        }
+        [self resetImage];
     }
-    else if(currentPage == imageNumber){
-        //最后一张图向右
-        currentPage = 1;
-        preIndex = imageNumber;
-        nextIndex = currentPage + 1;
-    }
-    else{
-        currentPage = currentPage +1;
-        nextIndex =(currentPage +1) > imageNumber?1:(currentPage +1);
-        preIndex = (currentPage -1) <=0?imageNumber:(currentPage - 1);
-    }
+}
 
-    [self.currentImageView setImage:[self getImageFromCache:imageNameArray[currentPage -1]]];
-    [self.preImageView setImage:[self getImageFromCache:imageNameArray[preIndex - 1]]];
-    [self.nextImageView setImage:[self getImageFromCache:imageNameArray[nextIndex - 1]]];
-    
-    self.pageControl.currentPage = currentPage -1;
-    currentImageNumber = currentPage - 1;
+- (void)resetImage{
+    [self.currentImageView setImage:[self getImageFromCache:imageNameArray[self.pageControl.currentPage]]];
+    preIndex = self.pageControl.currentPage - 1;
+    if(preIndex <0) preIndex = imageNumber -1;
+    [self.preImageView setImage:[self getImageFromCache:imageNameArray[preIndex]]];
+    nextIndex = self.pageControl.currentPage+1;
+    if(nextIndex >= imageNumber) nextIndex = 0;
+    [self.nextImageView setImage:[self getImageFromCache:imageNameArray[nextIndex]]];
+    [self.scrollView setContentOffset:CGPointMake(self.bounds.size.width, 0) animated:NO];
+     
     
 }
 
@@ -185,25 +191,24 @@
 
 #pragma mark scrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    CGFloat scrollX = self.scrollView.contentOffset.x;
-    NSInteger currentPage = self.pageControl.currentPage;
+    CGFloat moveX = scrollView.contentOffset.x - CGRectGetWidth(scrollView.frame);
+
+     if (fabs(lastMoveX) >= self.bounds.size.width) {
+         [self resetImage];
+         lastMoveX = 0;
+         return;
+     }
     
-    if(scrollX == 0){
-        currentPage = currentPage -1;
-        [self reloadImage:currentPage];
-        [self.scrollView setContentOffset:CGPointMake(selfWidth, 0) animated:NO];
-    }
-    else
-        if(scrollX == selfWidth*2){
-            currentPage = currentPage +1;
-            [self reloadImage:currentPage];
-            [self.scrollView setContentOffset:CGPointMake(selfWidth, 0) animated:NO];
-        }
+     if (fabs(moveX) >= self.bounds.size.width) {
+         [self completeHandler];
+     }
+    
+    lastMoveX = moveX;
+
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
     [self endTime];
-    
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
